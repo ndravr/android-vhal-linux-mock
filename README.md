@@ -29,14 +29,14 @@ policy, an Android application or a graphical dashboard.
 
 ## Topology
 
-### Current WSL development topology
+### Current Ubuntu development topology
 
-All three executables currently run in the selected `Ubuntu-24.04` WSL
-distribution. `qnx_provider_sim` temporarily represents the future QNX host.
+All three executables currently run on Ubuntu 24.04. `qnx_provider_sim`
+temporarily represents the future QNX host.
 
 ```mermaid
 flowchart LR
-    subgraph WSL[Ubuntu-24.04 WSL]
+    subgraph UBUNTU[Ubuntu 24.04]
         SIM[qnx_provider_sim<br/>temporary QNX authority]
 
         subgraph GUEST[Future Ubuntu qvm guest processes]
@@ -84,8 +84,7 @@ properties.
 | `linux_vhal_stub` | Guest-side service. Fetches the initial provider snapshot, consumes updates, maps canonical signals to VHAL properties, stores the guest cache and serves local clients. |
 | `vehicle_client` | Example generic Linux application. Lists configurations, reads properties, requests writes, subscribes to events and checks provider health. |
 
-The build creates native Linux ELF executables under `build/`. Linux
-executables do not use a `.exe` suffix.
+The build creates native Linux ELF executables under `build/`.
 
 ## Interfaces
 
@@ -234,7 +233,7 @@ provider is disconnected; explicit stale-value marking is a future improvement.
 
 ## Build
 
-The tested environment is the non-default WSL distribution `Ubuntu-24.04`.
+The tested environment is Ubuntu 24.04.
 
 Install dependencies:
 
@@ -243,19 +242,10 @@ sudo apt install g++ make pkg-config protobuf-compiler \
     protobuf-compiler-grpc libprotobuf-dev libgrpc++-dev
 ```
 
-Build from an `Ubuntu-24.04` shell after changing to wherever this standalone
+Build from an Ubuntu 24.04 shell after changing to wherever this standalone
 folder is located:
 
 ```bash
-cd /path/to/vhal_stub
-make
-```
-
-From PowerShell, start the selected distribution and build from the folder's
-WSL path:
-
-```powershell
-wsl -d Ubuntu-24.04
 cd /path/to/vhal_stub
 make
 ```
@@ -265,7 +255,7 @@ commands. Use `make clean` to remove generated code, objects and executables.
 
 ## Run manually
 
-Use three `Ubuntu-24.04` terminals.
+Use three Ubuntu 24.04 terminals.
 
 Terminal 1 — temporary authority:
 
@@ -359,16 +349,6 @@ Verify that `linux_vhal_stub` is running and the socket exists:
 
 ```bash
 ls -l /tmp/virtual-sdv-vhal.sock
-```
-
-### No `.exe` files
-
-The outputs are native Linux executables:
-
-```text
-build/qnx_provider_sim
-build/linux_vhal_stub
-build/vehicle_client
 ```
 
 ## Source layout
