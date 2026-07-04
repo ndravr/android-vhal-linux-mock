@@ -56,16 +56,16 @@ stub and its application-facing interface remain unchanged.
 
 ```mermaid
 flowchart LR
-    subgraph QNX[QNX Hypervisor host domain]
-        INPUT[CAN-shaped simulator<br/>or vehicle ingress]
-        VCAR[/dev/vcar<br/>authoritative state]
-        QSVC[qnx_vehicle_service<br/>canonical signal provider]
+    subgraph QNX["QNX Hypervisor host domain"]
+        INPUT["CAN-shaped simulator<br/>or vehicle ingress"]
+        VCAR["/dev/vcar<br/>authoritative state"]
+        QSVC["qnx_vehicle_service<br/>canonical signal provider"]
         INPUT --> VCAR --> QSVC
     end
 
-    subgraph VM[Ubuntu qvm guest]
-        VHAL[linux_vhal_stub]
-        APP[generic vehicle application]
+    subgraph VM["Ubuntu qvm guest"]
+        VHAL["linux_vhal_stub"]
+        APP["generic vehicle application"]
         VHAL <-->|Unix-domain socket IPC| APP
     end
 
