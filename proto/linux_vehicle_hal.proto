@@ -1,0 +1,56 @@
+syntax = "proto3";
+package virtualsdv.vehicle.v1;
+
+// Portable VHAL behavior. Numeric property IDs match AOSP VehicleProperty.aidl.
+enum VehiclePropertyStatus { VEHICLE_PROPERTY_STATUS_AVAILABLE = 0; VEHICLE_PROPERTY_STATUS_UNAVAILABLE = 1; VEHICLE_PROPERTY_STATUS_ERROR = 2; }
+enum VehiclePropertyAccess { VEHICLE_PROPERTY_ACCESS_NONE = 0; VEHICLE_PROPERTY_ACCESS_READ = 1; VEHICLE_PROPERTY_ACCESS_WRITE = 2; VEHICLE_PROPERTY_ACCESS_READ_WRITE = 3; }
+enum VehiclePropertyChangeMode { VEHICLE_PROPERTY_CHANGE_MODE_STATIC = 0; VEHICLE_PROPERTY_CHANGE_MODE_ON_CHANGE = 1; VEHICLE_PROPERTY_CHANGE_MODE_CONTINUOUS = 2; }
+enum StatusCode { STATUS_OK = 0; STATUS_TRY_AGAIN = 1; STATUS_INVALID_ARG = 2; STATUS_NOT_AVAILABLE = 3; STATUS_ACCESS_DENIED = 4; STATUS_INTERNAL_ERROR = 5; }
+
+enum VehicleProperty {
+  VEHICLE_PROPERTY_INVALID = 0;
+  PERF_VEHICLE_SPEED = 291504647;    // 0x11600207
+  GEAR_SELECTION = 289408000;        // 0x11400400
+  IGNITION_STATE = 289408009;        // 0x11400409
+  HVAC_TEMPERATURE_SET = 358614275;  // 0x15600503
+}
+
+message Empty {}
+message RawPropValues { repeated int32 int32_values = 1; repeated int64 int64_values = 2; repeated float float_values = 3; bytes byte_values = 4; string string_value = 5; }
+message VehiclePropValue { int64 timestamp = 1; int32 area_id = 2; int32 prop = 3; VehiclePropertyStatus status = 4; RawPropValues value = 5; uint64 source_sequence = 6; }
+message VehicleAreaConfig { int32 area_id = 1; repeated int64 supported_enum_values = 2; float min_float_value = 3; float max_float_value = 4; }
+message VehiclePropConfig { int32 prop = 1; string name = 2; VehiclePropertyAccess access = 3; VehiclePropertyChangeMode change_mode = 4; repeated VehicleAreaConfig area_configs = 5; float min_sample_rate = 6; float max_sample_rate = 7; string unit = 8; }
+message VehiclePropConfigs { repeated VehiclePropConfig configs = 1; }
+message VehiclePropValues { repeated VehiclePropValue values = 1; }
+message GetValueRequest { int64 request_id = 1; int32 prop = 2; int32 area_id = 3; }
+message GetValueRequests { repeated GetValueRequest requests = 1; }
+message GetValueResult { int64 request_id = 1; StatusCode status = 2; VehiclePropValue value = 3; }
+message GetValueResults { repeated GetValueResult results = 1; }
+message SetValueRequest { int64 request_id = 1; VehiclePropValue value = 2; }
+message SetValueRequests { repeated SetValueRequest requests = 1; }
+message SetValueResult { int64 request_id = 1; StatusCode status = 2; string message = 3; }
+message SetValueResults { repeated SetValueResult results = 1; }
+message SubscribeRequest { repeated int32 prop_ids = 1; float sample_rate = 2; }
+message VehicleHalHealth { bool provider_connected = 1; string state = 2; }
+
+// Canonical QNX-side signal model. The guest maps it to VHAL IDs and units.
+enum CanonicalSignal { CANONICAL_SIGNAL_UNSPECIFIED = 0; CANONICAL_VEHICLE_SPEED_KPH = 1; CANONICAL_GEAR_POSITION = 2; CANONICAL_IGNITION_STATE = 3; CANONICAL_HVAC_TARGET_TEMPERATURE_C = 4; }
+message CanonicalSignalValue { CanonicalSignal signal = 1; double float_value = 2; int32 enum_value = 3; int64 source_timestamp = 4; uint64 source_sequence = 5; }
+message CanonicalSignalValues { repeated CanonicalSignalValue values = 1; }
+message SetSignalRequest { int64 request_id = 1; CanonicalSignalValue value = 2; }
+message SetSignalResult { int64 request_id = 1; StatusCode status = 2; string message = 3; }
+
+service LinuxVehicleHal {
+  rpc GetAllPropConfigs(Empty) returns (VehiclePropConfigs);
+  rpc GetValues(GetValueRequests) returns (GetValueResults);
+  rpc SetValues(SetValueRequests) returns (SetValueResults);
+  rpc Subscribe(SubscribeRequest) returns (stream VehiclePropValues);
+  rpc GetHealth(Empty) returns (VehicleHalHealth);
+}
+
+// Temporary authority simulator boundary; qnx_vehicle_service replaces it later.
+service CanonicalVehicleProvider {
+  rpc GetSnapshot(Empty) returns (CanonicalSignalValues);
+  rpc SetSignal(SetSignalRequest) returns (SetSignalResult);
+  rpc Subscribe(Empty) returns (stream CanonicalSignalValues);
+}
