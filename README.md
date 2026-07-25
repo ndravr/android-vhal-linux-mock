@@ -8,6 +8,16 @@ Linux applications through local IPC.
 It is a **VHAL-compatible integration service**. Its process boundaries use
 portable Protobuf and gRPC.
 
+## Parent-project task links
+
+When this repository is checked out as `linux/vhal_stub` in Virtual SDV Cockpit,
+this component is owned by:
+
+- [Task 3 — prepare the reproducible development workstation](../../tasks/3-Prepare-Linux-Mint-for-native-development-virtualization-and-large-platform-builds.md)
+- [Task 5 — freeze the signal schema and wire protocol](../../tasks/5-Define-the-shared-vehicle-signal-model-and-versioned-transport-protocol.md)
+- [Task 9 — connect the Linux VHAL service to the QNX provider](../../tasks/9-Integrate-the-Linux-VHAL-executable-with-the-QNX-provider.md)
+- [Task 10 — deliver the Linux cockpit client and VHAL behavior](../../tasks/10-Deliver-the-Linux-VHAL-property-service-and-cockpit-client.md)
+
 ## What it demonstrates
 
 - separation between an authoritative vehicle controller and a consumer guest
