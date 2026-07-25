@@ -1,7 +1,7 @@
 syntax = "proto3";
 package virtualsdv.vehicle.v1;
 
-// Portable VHAL behavior. Numeric property IDs match AOSP VehicleProperty.aidl.
+// Portable VHAL behavior with stable numeric vehicle-property IDs.
 enum VehiclePropertyStatus { VEHICLE_PROPERTY_STATUS_AVAILABLE = 0; VEHICLE_PROPERTY_STATUS_UNAVAILABLE = 1; VEHICLE_PROPERTY_STATUS_ERROR = 2; }
 enum VehiclePropertyAccess { VEHICLE_PROPERTY_ACCESS_NONE = 0; VEHICLE_PROPERTY_ACCESS_READ = 1; VEHICLE_PROPERTY_ACCESS_WRITE = 2; VEHICLE_PROPERTY_ACCESS_READ_WRITE = 3; }
 enum VehiclePropertyChangeMode { VEHICLE_PROPERTY_CHANGE_MODE_STATIC = 0; VEHICLE_PROPERTY_CHANGE_MODE_ON_CHANGE = 1; VEHICLE_PROPERTY_CHANGE_MODE_CONTINUOUS = 2; }

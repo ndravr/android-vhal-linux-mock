@@ -1,13 +1,11 @@
 # Linux VHAL-compatible property service
 
-This component demonstrates an Android Vehicle HAL-shaped property flow without
-requiring Android Automotive OS. It runs natively on Linux, receives canonical
-vehicle signals from a QNX-side authority, maps them to Android-compatible
-vehicle properties, and exposes those properties to ordinary Linux applications
-through local IPC.
+This component implements a Vehicle HAL-shaped property flow as a native Linux
+service. It receives canonical vehicle signals from a QNX-side authority, maps
+them to stable vehicle properties, and exposes those properties to ordinary
+Linux applications through local IPC.
 
-It is a **VHAL-compatible integration service**, not an Android Binder HAL. The
-property identifiers and behavior follow AOSP, while the process boundaries use
+It is a **VHAL-compatible integration service**. Its process boundaries use
 portable Protobuf and gRPC.
 
 ## What it demonstrates
@@ -15,7 +13,7 @@ portable Protobuf and gRPC.
 - separation between an authoritative vehicle controller and a consumer guest
 - initial vehicle-state synchronization
 - canonical-signal-to-VHAL-property mapping
-- Android-compatible property IDs, areas, access modes, change modes and units
+- stable property IDs, areas, access modes, change modes and units
 - batched `GetValues` and `SetValues` operations
 - continuous and on-change subscriptions
 - server-streamed property events
@@ -24,8 +22,8 @@ portable Protobuf and gRPC.
 - provider health and reconnection
 - Linux-native IPC over a Unix-domain socket
 
-It does not implement Android Binder, Car Service, VINTF, Android SELinux HAL
-policy, an Android application or a graphical dashboard.
+It does not implement a graphical dashboard or platform-specific application
+framework.
 
 ## Topology
 
@@ -121,18 +119,17 @@ It listens on this Unix-domain socket:
 
 ## Supported properties
 
-A real VHAL advertises only properties implemented by the vehicle. It does not
-need to implement every property defined by Android.
+A VHAL advertises only properties implemented by the vehicle.
 
-| Property | AOSP ID | Access | Change mode | Unit and area |
+| Property | Property ID | Access | Change mode | Unit and area |
 | --- | --- | --- | --- | --- |
 | `PERF_VEHICLE_SPEED` | `0x11600207` | Read | Continuous | m/s, global |
 | `GEAR_SELECTION` | `0x11400400` | Read | On change | `VehicleGear`, global |
 | `IGNITION_STATE` | `0x11400409` | Read | On change | `VehicleIgnitionState`, global |
 | `HVAC_TEMPERATURE_SET` | `0x15600503` | Read/write | On change | degC, row-one-left seat |
 
-Canonical QNX speed is expressed in km/h. The VHAL stub converts it to m/s as
-required by AOSP `PERF_VEHICLE_SPEED`.
+Canonical QNX speed is expressed in km/h. The VHAL stub converts it to m/s for
+`PERF_VEHICLE_SPEED`.
 
 ## Complete property flows
 
@@ -363,16 +360,8 @@ src/vehicle_client.cpp          Generic console application
 tests/smoke.sh                  End-to-end smoke test
 ```
 
-## Relationship to AOSP VHAL
+## Compatibility scope
 
-The full Android interface source is maintained in AOSP:
-
-- `hardware/interfaces/automotive/vehicle/aidl/android/hardware/automotive/vehicle/`
-  contains `IVehicle.aidl`, callbacks, requests, results, values,
-  configurations, status, access and change modes.
-- `hardware/interfaces/automotive/vehicle/aidl_property/android/hardware/automotive/vehicle/`
-  contains `VehicleProperty.aidl` and property-specific enums.
-
-AIDL-generated C++ bindings require Android Binder and an Android runtime. This
-service preserves the relevant behavior and official property IDs in a portable
-Protobuf contract rather than claiming to be an Android HAL.
+The service preserves the selected property identifiers and relevant VHAL
+behavior in a portable Protobuf contract. It intentionally implements only the
+properties required by this project.
