@@ -10,7 +10,7 @@
 #include <set>
 #include <thread>
 
-namespace virtualsdv
+namespace qnxvehiclepropertygateway
 {
     namespace
     {
@@ -258,14 +258,15 @@ namespace virtualsdv
             std::vector<pb::VehiclePropValue> events_;
         };
     } // namespace
-} // namespace virtualsdv
+} // namespace qnxvehiclepropertygateway
 
 int main(int argc, char **argv)
 {
-    const std::string socket = argc > 1 ? argv[1] : "/tmp/virtual-sdv-vhal.sock";
+    const std::string socket =
+        argc > 1 ? argv[1] : "/tmp/qnx-vehicle-property-gateway-vhal.sock";
     const std::string provider = argc > 2 ? argv[2] : "127.0.0.1:50051";
     std::remove(socket.c_str());
-    virtualsdv::VhalService service(provider);
+    qnxvehiclepropertygateway::VhalService service(provider);
     grpc::ServerBuilder builder;
     builder.AddListeningPort("unix:" + socket, grpc::InsecureServerCredentials());
     builder.RegisterService(&service);

@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-namespace virtualsdv
+namespace qnxvehiclepropertygateway
 {
     namespace pb = vehicle::v1;
     constexpr int32_t kGlobalArea = 0;
@@ -83,4 +83,4 @@ namespace virtualsdv
         auto c = findConfig(prop);
         return c ? c->name() : "UNKNOWN_PROPERTY";
     }
-} // namespace virtualsdv
+} // namespace qnxvehiclepropertygateway

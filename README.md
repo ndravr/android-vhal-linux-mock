@@ -10,8 +10,8 @@ portable Protobuf and gRPC.
 
 ## Parent-project task links
 
-When this repository is checked out as `linux/vhal_stub` in Virtual SDV Cockpit,
-this component is owned by:
+When this repository is checked out as `linux/vhal_stub` in QNX Vehicle
+Property Gateway, this component is owned by:
 
 - [Task 3 — prepare the reproducible development workstation](../../tasks/3-Prepare-Linux-Mint-for-native-development-virtualization-and-large-platform-builds.md)
 - [Task 5 — freeze the signal schema and wire protocol](../../tasks/5-Define-the-shared-vehicle-signal-model-and-versioned-transport-protocol.md)
@@ -124,7 +124,7 @@ This represents native IPC inside the Ubuntu guest:
 It listens on this Unix-domain socket:
 
 ```text
-/tmp/virtual-sdv-vhal.sock
+/tmp/qnx-vehicle-property-gateway-vhal.sock
 ```
 
 ## Supported properties
@@ -313,7 +313,7 @@ Stop a foreground process with `Ctrl+C`.
 Set `VHAL_SOCKET` to select a different local socket:
 
 ```bash
-VHAL_SOCKET=/run/virtual-sdv/vhal.sock ./build/vehicle_client health
+VHAL_SOCKET=/run/qnx-vehicle-property-gateway/vhal.sock ./build/vehicle_client health
 ```
 
 ## Automated validation
@@ -355,7 +355,7 @@ Nothing is available at the provider address, currently `127.0.0.1:50051`.
 Verify that `linux_vhal_stub` is running and the socket exists:
 
 ```bash
-ls -l /tmp/virtual-sdv-vhal.sock
+ls -l /tmp/qnx-vehicle-property-gateway-vhal.sock
 ```
 
 ## Source layout

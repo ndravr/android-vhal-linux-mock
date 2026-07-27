@@ -1,5 +1,5 @@
 syntax = "proto3";
-package virtualsdv.vehicle.v1;
+package qnxvehiclepropertygateway.vehicle.v1;
 
 // Portable VHAL behavior with stable numeric vehicle-property IDs.
 enum VehiclePropertyStatus { VEHICLE_PROPERTY_STATUS_AVAILABLE = 0; VEHICLE_PROPERTY_STATUS_UNAVAILABLE = 1; VEHICLE_PROPERTY_STATUS_ERROR = 2; }

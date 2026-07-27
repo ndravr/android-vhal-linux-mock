@@ -8,7 +8,7 @@
 #include <mutex>
 #include <thread>
 
-namespace virtualsdv
+namespace qnxvehiclepropertygateway
 {
     namespace
     {
@@ -132,12 +132,12 @@ namespace virtualsdv
             std::thread demo_;
         };
     } // namespace
-} // namespace virtualsdv
+} // namespace qnxvehiclepropertygateway
 
 int main(int argc, char **argv)
 {
     const std::string address = argc > 1 ? argv[1] : "127.0.0.1:50051";
-    virtualsdv::ProviderService service;
+    qnxvehiclepropertygateway::ProviderService service;
     grpc::ServerBuilder builder;
     builder.AddListeningPort(address, grpc::InsecureServerCredentials());
     builder.RegisterService(&service);

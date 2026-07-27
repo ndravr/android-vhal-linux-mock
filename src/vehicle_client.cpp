@@ -6,7 +6,7 @@
 #include <iostream>
 #include <stdexcept>
 
-namespace virtualsdv
+namespace qnxvehiclepropertygateway
 {
     namespace
     {
@@ -30,7 +30,8 @@ namespace virtualsdv
                 return 2;
             }
             const char *env = std::getenv("VHAL_SOCKET");
-            const std::string socket = env ? env : "/tmp/virtual-sdv-vhal.sock";
+            const std::string socket =
+                env ? env : "/tmp/qnx-vehicle-property-gateway-vhal.sock";
             auto stub = pb::LinuxVehicleHal::NewStub(grpc::CreateChannel("unix:" + socket, grpc::InsecureChannelCredentials()));
             const std::string command = argv[1];
             if (command == "configs")
@@ -117,13 +118,13 @@ namespace virtualsdv
             throw std::runtime_error("unknown command: " + command);
         }
     } // namespace
-} // namespace virtualsdv
+} // namespace qnxvehiclepropertygateway
 
 int main(int argc, char **argv)
 {
     try
     {
-        return virtualsdv::run(argc, argv);
+        return qnxvehiclepropertygateway::run(argc, argv);
     }
     catch (const std::exception &error)
     {
