@@ -47,7 +47,7 @@ flowchart LR
     subgraph UBUNTU[Ubuntu 24.04]
         SIM[qnx_provider_sim<br/>temporary QNX authority]
 
-        subgraph GUEST[Future Ubuntu qvm guest processes]
+        subgraph GUEST[Future Debian 12 qvm guest processes]
             VHAL[linux_vhal_stub<br/>VHAL-compatible service]
             APP[vehicle_client<br/>generic Linux application]
         end
@@ -71,7 +71,7 @@ flowchart LR
         INPUT --> VCAR --> QSVC
     end
 
-    subgraph VM["Ubuntu qvm guest"]
+    subgraph VM["Debian 12 qvm guest"]
         VHAL["linux_vhal_stub"]
         APP["generic vehicle application"]
         VHAL <-->|Unix-domain socket IPC| APP
@@ -83,6 +83,16 @@ flowchart LR
 QNX remains the only authority. `linux_vhal_stub` holds a non-authoritative
 cache so guest applications can read and subscribe to the latest received
 properties.
+
+The QNX host and Debian 12 guest now have a documented QVM boot path, but the
+QNX provider implementation is not yet deployed. `qnx_provider_sim` therefore
+remains a localhost-only development substitute; it is not the QNX endpoint.
+When [Task 8](../../tasks/8-Implement-the-QNX-vehicle-middleware-and-network-bridge.md)
+supplies `qnx_vehicle_service`, the planned guest-to-QNX endpoint is QNX
+`192.168.10.1:50051` over the private QVM network, with the guest at
+`192.168.10.2`. See the parent repository's
+[QVM runtime guide](../../qnx/startup/linux-qvm/README_linux_qvm.md) for the
+current deployment and network boundary.
 
 ## Executable roles
 
@@ -108,12 +118,13 @@ This represents the QNX-to-guest boundary:
 - `Subscribe` streams authoritative canonical signal changes.
 - `SetSignal` submits a write request and returns the authority's result.
 
-The simulator listens on `127.0.0.1:50051`. In the qvm deployment this becomes
-the QNX host address on qvm virtual Ethernet.
+The simulator listens on `127.0.0.1:50051`. Once the QNX provider is
+implemented, the QVM deployment endpoint becomes QNX host address
+`192.168.10.1:50051` on qvm virtual Ethernet; that provider is not present yet.
 
 ### Local application interface: `LinuxVehicleHal`
 
-This represents native IPC inside the Ubuntu guest:
+This represents native IPC inside the Linux guest:
 
 - `GetAllPropConfigs` returns implemented property metadata.
 - `GetValues` performs batched cached reads.
